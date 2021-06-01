@@ -3,11 +3,11 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'org.asciidoctor.convert' version '1.5.8'
 	id 'java'
+	id 'info.solidsoft.pitest' version '1.5.1'
 }
 
 group = 'de.jkrech'
 version = '0.0.1-SNAPSHOT'
-//sourceCompatibility = JavaLanguageVersion.of(11)
 
 repositories {
 	mavenCentral()
@@ -35,6 +35,12 @@ asciidoctor {
 	dependsOn test
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
 // creates build/resources/main/build-info.properties
 springBoot {
 	buildInfo {
@@ -46,3 +52,13 @@ springBoot {
 		}
 	}
 }
+
+// liefert im Moment eine Fehlermeldung bei der Ausführung
+pitest {
+	testPlugin = 'junit5'
+    targetClasses = ['de.jkrech.todo.*']  //by default "${project.group}.*"
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
+}
+
