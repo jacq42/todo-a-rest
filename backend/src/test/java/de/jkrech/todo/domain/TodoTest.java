@@ -1,5 +1,6 @@
 package de.jkrech.todo.domain;
 
+import static java.time.LocalDate.now;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,7 +19,7 @@ public class TodoTest {
     @ParameterizedTest(name = "invalid: \"{0}\"")
     @NullSource
     public void invalidValuesShouldThrowAnException(Description description) {
-        assertThrows(IllegalArgumentException.class, () -> Todo.of(description));
+        assertThrows(IllegalArgumentException.class, () -> Todo.of(description, CompletionDate.of(now())));
     }
 
     @ParameterizedTest(name = "valid: description = \"{0}\" and completion date = \"{1}\" ")

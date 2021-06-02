@@ -17,10 +17,6 @@ public class Todo {
     private CreatedAt createdAt;
     private CompletionDate completionDate;
 
-    public static Todo of(Description description) {
-        return Todo.of(description, CreatedAt.of(now()), null);
-    }
-
     public static Todo of(Description description, CompletionDate completionDate) {
         return Todo.of(description, CreatedAt.of(now()), completionDate);
     }

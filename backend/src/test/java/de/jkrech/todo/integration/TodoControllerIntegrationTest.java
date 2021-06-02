@@ -1,6 +1,7 @@
 package de.jkrech.todo.integration;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
@@ -45,13 +46,19 @@ public class TodoControllerIntegrationTest {
                 .contentType(MediaType.TEXT_PLAIN)
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").exists())
+            .andExpect(jsonPath("$.description").exists())
+            .andExpect(jsonPath("$.createdAt").exists())
+            .andExpect(jsonPath("$.completionDate").exists());
     }
 
     @Test
     public void delete() throws Exception {
+        // given: a todo to delete
         Todo todo = todoService.createWith(Description.of("Lorem ipsum"), CompletionDate.of(LocalDate.now()));
 
+        // expect
         mvc.perform(MockMvcRequestBuilders.delete(BASE_URI + "/{id}", todo.id())
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
