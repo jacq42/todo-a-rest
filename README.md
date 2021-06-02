@@ -12,4 +12,4 @@ Sample Spring boot application with a REST Controller and REACT frontend
 
 ## Build
 
-`backend/gradlew clean build` builds frontend and backend into 1 jar
+`backend/gradlew clean build` builds the frontend and backend and packs them into a single jar
