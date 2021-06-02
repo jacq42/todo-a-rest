@@ -25,10 +25,6 @@ public class CompletionDate {
         return value;
     }
 
-    public String formattedValue() {
-        return value.format(DT_FORMATTER);
-    }
-
     @Override
     public String toString() {
         return value().format(DT_FORMATTER);

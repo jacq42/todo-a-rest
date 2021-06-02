@@ -3,8 +3,7 @@ package de.jkrech.todo.ports.html;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.jkrech.todo.domain.Todo;
@@ -38,12 +37,13 @@ public class TodoJson {
     }
 
     @JsonProperty("createdAt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     public LocalDateTime createdAt() {
         return createdAt;
     }
 
     @JsonProperty("completionDate")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     public LocalDate completionDate() {
         return completionDate;
     }
