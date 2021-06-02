@@ -1,0 +1,10 @@
+plugins {
+    id 'org.siouan.frontend-jdk11'
+}
+
+frontend {
+    nodeVersion = '14.16.1'
+    assembleScript = 'run-script build'
+    cleanScript = 'run clean'
+    checkScript = 'run check'
+}

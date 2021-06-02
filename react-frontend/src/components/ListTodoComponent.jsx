@@ -26,7 +26,7 @@ class ListTodoComponent extends Component {
 	render() {
 		return (
 			<div>
-				<h2 className="text-center">TODO List</h2>
+				<h2 className="text-center">Awesome todo list app</h2>
 				<div className="row">
 					<table className="table table-striped table-bordered">
 
