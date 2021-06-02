@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 public class TodoControllerIntegrationTest {
 
     private static final String BASE_URI = "/api/v1/todos";
+
     @Autowired
     private MockMvc mvc;
 
@@ -29,8 +30,23 @@ public class TodoControllerIntegrationTest {
     @Test
     public void create() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post(BASE_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .param("description", "super tolles todo"))
+                .param("description", "super tolles todo")
+                .contentType(MediaType.TEXT_PLAIN)
+                .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void delete() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post(BASE_URI)
+                .param("description", "super tolles todo")
+                .contentType(MediaType.TEXT_PLAIN)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders.delete(BASE_URI + "/{id}", "1000")
+                .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk());
     }

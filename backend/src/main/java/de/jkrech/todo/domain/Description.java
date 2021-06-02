@@ -1,5 +1,7 @@
 package de.jkrech.todo.domain;
 
+import static java.util.Optional.ofNullable;
+
 public class Description {
 
     private String value;
@@ -9,13 +11,18 @@ public class Description {
     }
 
     private Description(String value) {
-        if (value.isBlank()) {
-            throw new IllegalArgumentException("Value can't be empty");
-        }
-        this.value = value;
+        String validDescription = ofNullable(value)
+                .filter(v -> !v.isBlank())
+                .orElseThrow(() -> new IllegalArgumentException("Value can't be empty"));
+        this.value = validDescription;
     }
 
     public String value() {
         return this.value;
+    }
+
+    @Override
+    public String toString() {
+        return this.value();
     }
  }

@@ -1,6 +1,7 @@
 package de.jkrech.todo.domain;
 
 import static java.time.LocalDateTime.now;
+import static java.util.Optional.ofNullable;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,7 +22,8 @@ public class Todo {
         return Todo.of(description, now());
     }
 
-    public static Todo of(Description description, LocalDateTime createdAt) {
+    private static Todo of(Description description, LocalDateTime createdAt) {
+        ofNullable(description).orElseThrow(() -> new IllegalArgumentException("Description can't be empty."));
         Todo todo = new Todo();
         todo.id = ID_GENERATOR.getAndIncrement();
         todo.description = description;
