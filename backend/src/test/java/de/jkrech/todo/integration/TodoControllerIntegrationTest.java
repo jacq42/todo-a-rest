@@ -15,23 +15,24 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 public class TodoControllerIntegrationTest {
 
+    private static final String BASE_URI = "/api/v1/todos";
     @Autowired
     private MockMvc mvc;
 
     @Test
     public void list() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/list").accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
+        mvc.perform(MockMvcRequestBuilders.get(BASE_URI)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
     }
 
     @Test
     public void create() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/create")
+        mvc.perform(MockMvcRequestBuilders.post(BASE_URI)
                 .accept(MediaType.APPLICATION_JSON)
                 .param("description", "super tolles todo"))
-        .andDo(print())
-        .andExpect(status().isOk());
-//        .andExpect(content().json("{json:bla}"));
+            .andDo(print())
+            .andExpect(status().isOk());
     }
 
 }
