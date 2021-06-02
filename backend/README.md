@@ -1,3 +1,3 @@
-# TODO a REST
+# TODO a REST - backend
 
-Sample Spring boot application with a REST Controller and a small frontend
+Sample Spring boot application with a REST Controller
