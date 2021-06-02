@@ -5,9 +5,9 @@ import static java.util.stream.Collectors.toSet;
 import java.time.LocalDate;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,12 +29,8 @@ import de.jkrech.todo.domain.Todo;
 @RequestMapping("/api/v1/")
 public class TodoController {
 
-    @NonNull
+    @Autowired
     private TodoService todoService;
-
-    public TodoController(TodoService todoService) {
-        this.todoService = todoService;
-    }
 
     @GetMapping(path = "/todos", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<TodoJson>> list() {

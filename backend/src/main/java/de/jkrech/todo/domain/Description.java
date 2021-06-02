@@ -2,8 +2,11 @@ package de.jkrech.todo.domain;
 
 import static java.util.Optional.ofNullable;
 
+import org.springframework.lang.NonNull;
+
 public class Description {
 
+    @NonNull
     private String value;
 
     public static Description of(String value) {

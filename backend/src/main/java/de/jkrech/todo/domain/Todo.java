@@ -3,26 +3,42 @@ package de.jkrech.todo.domain;
 import static java.time.LocalDateTime.now;
 import static java.util.Optional.ofNullable;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public class Todo {
 
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger(1000);
 
+    @NonNull
     private Integer id;
+
+    @NonNull
     private Description description;
+
+    @NonNull
     private CreatedAt createdAt;
+
+    @Nullable
     private CompletionDate completionDate;
 
-    public static Todo of(Description description, CompletionDate completionDate) {
+    /**
+     * Creates a new {@link Todo} with specified parameters.
+     *
+     * @param description
+     * @param completionDate
+     * @return Valid {@link Todo}
+     */
+    public static Todo of(@NonNull Description description, @Nullable CompletionDate completionDate) {
         return Todo.of(description, CreatedAt.of(now()), completionDate);
     }
 
     private static Todo of(Description description, CreatedAt createdAt, CompletionDate completionDate) {
         ofNullable(description).orElseThrow(() -> new IllegalArgumentException("Description can't be empty."));
+
         Todo todo = new Todo();
         todo.id = ID_GENERATOR.getAndIncrement();
         todo.description = description;
@@ -48,8 +64,7 @@ public class Todo {
     }
 
     public CompletionDate completionDate() {
-        Optional<CompletionDate> optionalCompletionDate = Optional.ofNullable(completionDate);
-        return optionalCompletionDate.isPresent() ? optionalCompletionDate.get() : null;
+        return completionDate;
     }
 
     @Override

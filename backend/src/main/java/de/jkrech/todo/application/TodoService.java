@@ -1,20 +1,26 @@
 package de.jkrech.todo.application;
 
-import java.util.Collections;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableSet;
+import static java.util.Optional.ofNullable;
+import static org.springframework.util.CollectionUtils.isEmpty;
+
 import java.util.HashSet;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import de.jkrech.todo.domain.CompletionDate;
 import de.jkrech.todo.domain.Description;
 import de.jkrech.todo.domain.Todo;
 
+/**
+ * Service that adds, removes and lists {@link TODO}s
+ */
 @Service
 public class TodoService {
 
@@ -23,22 +29,23 @@ public class TodoService {
     /**
      * Returns a list of {@link Todo}s. Sorted by {@link Todo#createdAt()}
      *
-     * @return {@link Set} of {@link Todo}s
+     * @return unmodifiable {@link Set} of {@link Todo}s or empty set
      */
     public Set<Todo> list() {
-        return CollectionUtils.isEmpty(todos) ? Collections.emptySet()
-                : Collections.unmodifiableSet(new HashSet<>(todos));
+        return isEmpty(todos) ? emptySet() : unmodifiableSet(new HashSet<>(todos));
     }
 
     /**
      * Create a new {@link TODO} with {@link Description} and current time.
      *
-     * @param description
+     * @param description {@link Description}
+     * @param completionDate {@link CompletionDate}
      * @return {@link TODO} the created element
      * @throws IllegalArgumentException if description is invalid
      */
-    public Todo createWith(@NonNull Description description, CompletionDate completionDate) {
-        Optional.ofNullable(description).orElseThrow(() -> new IllegalArgumentException("Description can't be empty."));
+    public Todo createWith(@NonNull Description description, @Nullable CompletionDate completionDate) {
+        ofNullable(description).orElseThrow(() -> new IllegalArgumentException("Description can't be empty."));
+
         Todo todo = Todo.of(description, completionDate);
         addToList(todo);
         return todo;
@@ -46,17 +53,19 @@ public class TodoService {
 
     /**
      * Delete {@link TODO} with specified id
+     *
      * @param id of element to remove
      * @return id of removed element
      * @throws UnsupportedOperationException if elements cannot be removed
      * @throws NoSuchElementException if element is not in list
      * @throws IllegalArgumentException if id is invalid
      */
-    public Integer deleteWith(Integer id) {
-        if (CollectionUtils.isEmpty(todos)) {
+    public Integer deleteWith(@NonNull Integer id) {
+        if (isEmpty(todos)) {
             throw new UnsupportedOperationException("TODO List is empty");
         }
-        Optional.ofNullable(id).orElseThrow(() -> new IllegalArgumentException("ID can't be empty."));
+        ofNullable(id).orElseThrow(() -> new IllegalArgumentException("ID can't be empty."));
+
         boolean deleted = todos.removeIf(hasId(id));
         if (deleted) {
             return id;
@@ -69,7 +78,7 @@ public class TodoService {
     }
 
     private void addToList(Todo todo) {
-        if (CollectionUtils.isEmpty(todos)) {
+        if (isEmpty(todos)) {
             todos = new HashSet<>();
         }
         todos.add(todo);
