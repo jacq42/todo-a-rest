@@ -1,11 +1,11 @@
 package de.jkrech.todo.domain;
 
-import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,20 +23,21 @@ public class TodoTest {
 
     @ParameterizedTest(name = "valid: description = \"{0}\" and completion date = \"{1}\" ")
     @MethodSource("validValues")
-    public void createWithValidValues(Description description, LocalDateTime completionDate) {
+    public void createWithValidValues(Description description, CompletionDate completionDate) {
         // when
-        Todo todo = Todo.of(description);
+        Todo todo = Todo.of(description, completionDate);
 
         // then
         assertNotNull(todo.id());
-        assertEquals(description.value(), todo.description());
+        assertEquals(description, todo.description());
         assertNotNull(todo.createdAt());
+        assertEquals(completionDate, todo.completionDate());
     }
 
     private static Stream<Arguments> validValues() {
         return Stream.of(
-                Arguments.of(Description.of("Lorem ipsum"), now().plusMonths(1)),
-                Arguments.of(Description.of("    Lorem ipsum     "), now().plusMonths(1))
+                Arguments.of(Description.of("Lorem ipsum"), CompletionDate.of(LocalDate.of(2013, Month.FEBRUARY, 16)), "16.02.2013"),
+                Arguments.of(Description.of("    Lorem ipsum     "), null, null)
         );
     }
 }

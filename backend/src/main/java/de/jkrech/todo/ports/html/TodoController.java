@@ -1,9 +1,14 @@
 package de.jkrech.todo.ports.html;
 
+import static java.util.stream.Collectors.toSet;
+
+import java.time.LocalDate;
 import java.util.Set;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.jkrech.todo.application.TodoService;
+import de.jkrech.todo.domain.CompletionDate;
 import de.jkrech.todo.domain.Description;
 import de.jkrech.todo.domain.Todo;
 
@@ -31,15 +37,21 @@ public class TodoController {
     }
 
     @GetMapping(path = "/todos", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<Todo>> list() {
-        return ResponseEntity.ok(todoService.list());
+    public ResponseEntity<Set<TodoJson>> list() {
+        Set<TodoJson> allTodos = todoService.list().stream().map(TodoJson::from).collect(toSet());
+        return ResponseEntity.ok(allTodos);
     }
 
     @PostMapping(path = "/todos", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Todo> create(@RequestParam String description) {
+    public ResponseEntity<TodoJson> create(
+            @RequestParam String description,
+            @RequestParam @Nullable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate completionDate) {
+
         Description validDescription = Description.of(description);
-        Todo todo = todoService.createWith(validDescription);
-        return ResponseEntity.ok(todo);
+        CompletionDate validCompletionDate = CompletionDate.of(completionDate);
+
+        Todo todo = todoService.createWith(validDescription, validCompletionDate);
+        return ResponseEntity.ok(TodoJson.from(todo));
     }
 
     @DeleteMapping(path = "/todos/{id}")

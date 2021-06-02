@@ -35,6 +35,7 @@ class ListTodoComponent extends Component {
 								<th> ID</th>
 								<th> Created at</th>
 								<th> Description</th>
+								<th> Completion date</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -45,6 +46,7 @@ class ListTodoComponent extends Component {
 											<td> {todo.id} </td>
 											<td> {todo.createdAt} </td>
 											<td> {todo.description} </td>
+											<td> {todo.completionDate} </td>
 											<td>
 												<button style={{ marginLeft: "10px" }} onClick={() => this.deleteTodo(todo.id)} className="btn btn-danger">Delete </button>
 											</td>

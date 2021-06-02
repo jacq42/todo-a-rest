@@ -3,12 +3,10 @@ package de.jkrech.todo.domain;
 import static java.time.LocalDateTime.now;
 import static java.util.Optional.ofNullable;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.core.style.ToStringCreator;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Todo {
 
@@ -16,18 +14,24 @@ public class Todo {
 
     private Integer id;
     private Description description;
-    private LocalDateTime createdAt;
+    private CreatedAt createdAt;
+    private CompletionDate completionDate;
 
     public static Todo of(Description description) {
-        return Todo.of(description, now());
+        return Todo.of(description, CreatedAt.of(now()), null);
     }
 
-    private static Todo of(Description description, LocalDateTime createdAt) {
+    public static Todo of(Description description, CompletionDate completionDate) {
+        return Todo.of(description, CreatedAt.of(now()), completionDate);
+    }
+
+    private static Todo of(Description description, CreatedAt createdAt, CompletionDate completionDate) {
         ofNullable(description).orElseThrow(() -> new IllegalArgumentException("Description can't be empty."));
         Todo todo = new Todo();
         todo.id = ID_GENERATOR.getAndIncrement();
         todo.description = description;
         todo.createdAt = createdAt;
+        todo.completionDate = completionDate;
         return todo;
     }
 
@@ -35,23 +39,25 @@ public class Todo {
 
     }
 
-    @JsonProperty("id")
     public Integer id() {
         return id;
     }
 
-    @JsonProperty("description")
-    public String description() {
-        return description.value();
+    public Description description() {
+        return description;
     }
 
-    @JsonProperty("createdAt")
-    public LocalDateTime createdAt() {
+    public CreatedAt createdAt() {
         return createdAt;
+    }
+
+    public CompletionDate completionDate() {
+        Optional<CompletionDate> optionalCompletionDate = Optional.ofNullable(completionDate);
+        return optionalCompletionDate.isPresent() ? optionalCompletionDate.get() : null;
     }
 
     @Override
     public String toString() {
-        return new ToStringCreator(this).append(createdAt).append(description.value()).toString();
+        return new ToStringCreator(this).append(createdAt).append(description).toString();
     }
 }

@@ -3,7 +3,8 @@ package de.jkrech.todo.integration;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.Disabled;
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,11 +13,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import de.jkrech.todo.application.TodoService;
+import de.jkrech.todo.domain.CompletionDate;
+import de.jkrech.todo.domain.Description;
+import de.jkrech.todo.domain.Todo;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TodoControllerIntegrationTest {
 
     private static final String BASE_URI = "/api/v1/todos";
+
+    @Autowired
+    private TodoService todoService;
 
     @Autowired
     private MockMvc mvc;
@@ -32,6 +41,7 @@ public class TodoControllerIntegrationTest {
     public void create() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post(BASE_URI)
                 .param("description", "super tolles todo")
+                .param("completionDate", "2023-02-16")
                 .contentType(MediaType.TEXT_PLAIN)
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -39,15 +49,10 @@ public class TodoControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     public void delete() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post(BASE_URI)
-                .param("description", "super tolles todo")
-                .contentType(MediaType.TEXT_PLAIN)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+        Todo todo = todoService.createWith(Description.of("Lorem ipsum"), CompletionDate.of(LocalDate.now()));
 
-        mvc.perform(MockMvcRequestBuilders.delete(BASE_URI + "/{id}", "1000")
+        mvc.perform(MockMvcRequestBuilders.delete(BASE_URI + "/{id}", todo.id())
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk());

@@ -1,6 +1,7 @@
 package de.jkrech.todo.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,14 +11,20 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import de.jkrech.todo.domain.CompletionDate;
 import de.jkrech.todo.domain.Description;
 import de.jkrech.todo.domain.Todo;
 
 public class TodoServiceTest {
+
+    private static final Description DEFAULT_DESCRIPTION = Description.of("todo #1");
+
+    private static final CompletionDate EMPTY_COMPLETION_DATE = null;
 
     private TodoService todoService;
 
@@ -29,7 +36,7 @@ public class TodoServiceTest {
     @Test
     public void addTodoToList() {
         // when
-        Todo todo = todoService.createWith(Description.of("Something needs to be done"));
+        Todo todo = todoService.createWith(Description.of("Something needs to be done"), EMPTY_COMPLETION_DATE);
 
         // then
         assertTodoIsInList(todoService.list(), todo.id());
@@ -37,23 +44,20 @@ public class TodoServiceTest {
 
     @Test
     public void addingWithInvalidValuesShouldThrowAnException() {
-        assertThrows(IllegalArgumentException.class, () -> todoService.createWith(null), "empty values are invalid");
+        assertThrows(IllegalArgumentException.class, () -> todoService.createWith(null, EMPTY_COMPLETION_DATE), "empty values are invalid");
     }
 
     @Test
     public void listContainsAllTodos() {
-        // given
-        Description description1 = Description.of("todo #1");
+        // given: a set with descriptions
         Description description2 = Description.of("todo #2");
+        Set<Description> todosToAdd = new HashSet<>(Arrays.asList(DEFAULT_DESCRIPTION, description2));
 
-        // and
-        Set<Description> todosToAdd = new HashSet<>(Arrays.asList(description1, description2));
-
-        // when
+        // when: creating todos
         Set<Todo> createdTodos = new HashSet<>();
-        todosToAdd.forEach(description -> createdTodos.add(todoService.createWith(description)));
+        todosToAdd.forEach(description -> createdTodos.add(todoService.createWith(description, EMPTY_COMPLETION_DATE)));
 
-        // then
+        // then: they can be found in the list
         Set<Todo> todoList = todoService.list();
         assertEquals(2, todoList.size());
         Iterator<Todo> todoIterator = createdTodos.iterator();
@@ -63,14 +67,17 @@ public class TodoServiceTest {
 
     @Test
     public void todoCanBeDeleted() {
-        // given
-        Todo createdTodo = todoService.createWith(Description.of("todo #1"));
+        // given: a list with 1 todo
+        Todo createdTodo = todoService.createWith(DEFAULT_DESCRIPTION, EMPTY_COMPLETION_DATE);
 
-        // when
+        // when: deleting this todo by id
         Integer deletedId = todoService.deleteWith(createdTodo.id());
 
-        // then: same id
+        // then: the todo has been delete
         assertEquals(createdTodo.id(), deletedId);
+
+        // and: can not be found in the list
+        assertTodoIsNotInList(todoService.list(), createdTodo.id());
     }
 
     @Test
@@ -81,7 +88,7 @@ public class TodoServiceTest {
     @Test
     public void cannotDeleteUnknownTodos() {
         // given
-        todoService.createWith(Description.of("todo #1"));
+        todoService.createWith(DEFAULT_DESCRIPTION, EMPTY_COMPLETION_DATE);
 
         // expect
         assertThrows(NoSuchElementException.class, () -> todoService.deleteWith(Integer.MAX_VALUE));
@@ -90,13 +97,26 @@ public class TodoServiceTest {
     @Test
     public void deleteWithInvalidValuesShouldThrowAnException() {
         // given
-        todoService.createWith(Description.of("todo #1"));
+        todoService.createWith(DEFAULT_DESCRIPTION, EMPTY_COMPLETION_DATE);
 
         assertThrows(IllegalArgumentException.class, () -> todoService.deleteWith(null));
     }
 
+    // -- private asserts
+
     private void assertTodoIsInList(Set<Todo> todoList, Integer idToFind) {
-        Optional<Todo> createdTodo = todoList.stream().filter(t -> t.id().equals(idToFind)).findFirst();
-        assertTrue(createdTodo.isPresent());
+        assertTrue(todoIsInList().test(todoList, idToFind));
     }
+
+    private void assertTodoIsNotInList(Set<Todo> todoList, Integer idToFind) {
+        assertFalse(todoIsInList().test(todoList, idToFind));
+    }
+
+    private BiPredicate<Set<Todo>, Integer> todoIsInList() {
+        return (todoList, idToFind) -> {
+            Optional<Todo> createdTodo = todoList.stream().filter(t -> t.id().equals(idToFind)).findFirst();
+            return createdTodo.isPresent();
+        };
+    }
+
 }

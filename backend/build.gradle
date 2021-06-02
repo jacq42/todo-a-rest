@@ -62,7 +62,7 @@ tasks.register('processFrontendResources', Copy) {
 
     group 'Frontend'
     description 'Process frontend resources'
-    //dependsOn project(':react-frontend').tasks.named('assembleFrontend')
+    dependsOn project(':react-frontend').tasks.named('assembleFrontend')
 
     from frontendBuildDir
     into frontendResourcesDir

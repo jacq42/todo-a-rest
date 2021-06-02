@@ -18,11 +18,11 @@ public class Description {
     }
 
     public String value() {
-        return this.value;
+        return value;
     }
 
     @Override
     public String toString() {
-        return this.value();
+        return value();
     }
  }

@@ -38,3 +38,4 @@ out/
 .vscode/
 /_todo.tmp
 
+/.attach_pid*

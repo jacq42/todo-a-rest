@@ -11,6 +11,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import de.jkrech.todo.domain.CompletionDate;
 import de.jkrech.todo.domain.Description;
 import de.jkrech.todo.domain.Todo;
 
@@ -36,9 +37,9 @@ public class TodoService {
      * @return {@link TODO} the created element
      * @throws IllegalArgumentException if description is invalid
      */
-    public Todo createWith(@NonNull Description description) {
+    public Todo createWith(@NonNull Description description, CompletionDate completionDate) {
         Optional.ofNullable(description).orElseThrow(() -> new IllegalArgumentException("Description can't be empty."));
-        Todo todo = Todo.of(description);
+        Todo todo = Todo.of(description, completionDate);
         addToList(todo);
         return todo;
     }
