@@ -44,20 +44,6 @@ public class TodoService {
     }
 
     /**
-     * Find {@link TODO} with specified id
-     *
-     * @param id
-     * @return {@link TODO}
-     */
-    public Todo findBy(@NonNull Integer id) {
-        Optional.ofNullable(id).orElseThrow(() -> new IllegalArgumentException("ID can't be empty."));
-        return todos.stream()
-                .filter(t -> t.id().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("Could not find TODO with ID " + id));
-    }
-
-    /**
      * Delete {@link TODO} with specified id
      * @param id of element to remove
      * @return id of removed element

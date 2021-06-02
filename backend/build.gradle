@@ -3,7 +3,6 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'org.asciidoctor.convert' version '1.5.8'
 	id 'java'
-	id 'info.solidsoft.pitest' version '1.5.1'
 }
 
 group = 'de.jkrech'
@@ -53,15 +52,6 @@ springBoot {
 	}
 }
 
-// liefert im Moment eine Fehlermeldung bei der Ausführung
-pitest {
-	testPlugin = 'junit5'
-    targetClasses = ['de.jkrech.todo.*']  //by default "${project.group}.*"
-    threads = 4
-    outputFormats = ['XML', 'HTML']
-    timestampedReports = false
-}
-
 // Frontend + Backend = Happyend
 tasks.register('processFrontendResources', Copy) {
     // Directory containing the artifacts in the frontend project
@@ -72,7 +62,7 @@ tasks.register('processFrontendResources', Copy) {
 
     group 'Frontend'
     description 'Process frontend resources'
-    dependsOn project(':react-frontend').tasks.named('assembleFrontend')
+    //dependsOn project(':react-frontend').tasks.named('assembleFrontend')
 
     from frontendBuildDir
     into frontendResourcesDir
