@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import de.jkrech.todo.application.TodoService;
 import de.jkrech.todo.domain.CompletionDate;
 import de.jkrech.todo.domain.Description;
-import de.jkrech.todo.domain.Todo;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -43,10 +42,10 @@ public class TodoController {
             @RequestParam String description,
             @RequestParam @Nullable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate completionDate) {
 
-        Description validDescription = Description.of(description);
-        CompletionDate validCompletionDate = CompletionDate.of(completionDate);
+        var validDescription = Description.of(description);
+        var validCompletionDate = CompletionDate.of(completionDate);
 
-        Todo todo = todoService.createWith(validDescription, validCompletionDate);
+        var todo = todoService.createWith(validDescription, validCompletionDate);
         return ResponseEntity.ok(TodoJson.from(todo));
     }
 

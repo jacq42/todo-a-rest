@@ -25,7 +25,7 @@ import de.jkrech.todo.domain.Description;
 import de.jkrech.todo.domain.Todo;
 
 @ExtendWith(MockitoExtension.class)
-public class TodoControllerTest {
+class TodoControllerTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Todo mockedTodo;
@@ -37,7 +37,7 @@ public class TodoControllerTest {
     private TodoController todoController;
 
     @Test
-    public void canCreateNewTodo() {
+    void canCreateNewTodo() {
         // given
         when(todoService.createWith(any(Description.class), any(CompletionDate.class))).thenReturn(mockedTodo);
 
@@ -49,7 +49,7 @@ public class TodoControllerTest {
     }
 
     @Test
-    public void canListAllTodos() {
+    void canListAllTodos() {
         // given
         when(todoService.list()).thenReturn(Collections.singleton(mockedTodo));
 
@@ -61,7 +61,7 @@ public class TodoControllerTest {
     }
 
     @Test
-    public void canDeleteATodoById() {
+    void canDeleteATodoById() {
         // given
         Integer id = 1000;
         when(todoService.deleteWith(id)).thenReturn(id);
@@ -75,7 +75,7 @@ public class TodoControllerTest {
     }
 
     @Test
-    public void shouldForwardExceptions() {
+    void shouldForwardExceptions() {
         // given
         Integer id = 1000;
         when(todoService.deleteWith(id)).thenThrow(UnsupportedOperationException.class);
@@ -88,7 +88,7 @@ public class TodoControllerTest {
     }
 
     @Test
-    public void invalidParamtersShouldThrowAnException() {
+    void invalidParamtersShouldThrowAnException() {
         assertThrows(IllegalArgumentException.class, () -> todoController.create("", null));
     }
 }

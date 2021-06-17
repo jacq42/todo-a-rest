@@ -7,10 +7,10 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-public class CompletionDateTest {
+class CompletionDateTest {
 
     @Test
-    public void createValidDates() {
+    void createValidDates() {
         // given
         LocalDate dateTime = LocalDate.now();
 
@@ -22,7 +22,7 @@ public class CompletionDateTest {
     }
 
     @Test
-    public void emptyValueReturnsEmptyObject() {
+    void emptyValueReturnsEmptyObject() {
         // when
         CompletionDate completionDate = CompletionDate.of(null);
 

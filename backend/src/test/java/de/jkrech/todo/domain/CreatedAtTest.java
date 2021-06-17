@@ -9,16 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 
-public class CreatedAtTest {
+class CreatedAtTest {
 
     @ParameterizedTest(name = "invalid: \"{0}\"")
     @NullSource
-    public void invalidValuesShouldThrowAnException(LocalDateTime value) {
+    void invalidValuesShouldThrowAnException(LocalDateTime value) {
         assertThrows(IllegalArgumentException.class, () -> CreatedAt.of(value));
     }
 
     @Test
-    public void createValidDates() {
+    void createValidDates() {
         // given
         LocalDateTime dateTime = LocalDateTime.now();
 

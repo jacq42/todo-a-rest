@@ -11,13 +11,12 @@ import de.jkrech.todo.domain.CompletionDate;
 import de.jkrech.todo.domain.Description;
 import de.jkrech.todo.domain.Todo;
 
-public class TodoJsonTest {
+class TodoJsonTest {
 
     private static final DateTimeFormatter DTF_CREATED_AT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-
     @Test
-    public void convertsFromTodo() throws Exception {
+    void convertsFromTodo() throws Exception {
         // given
         Todo todo = Todo.of(Description.of("Lorem ipsum"), CompletionDate.of(LocalDate.now()));
 

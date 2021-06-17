@@ -20,7 +20,7 @@ import de.jkrech.todo.domain.CompletionDate;
 import de.jkrech.todo.domain.Description;
 import de.jkrech.todo.domain.Todo;
 
-public class TodoServiceTest {
+class TodoServiceTest {
 
     private static final Description DEFAULT_DESCRIPTION = Description.of("todo #1");
 
@@ -34,7 +34,7 @@ public class TodoServiceTest {
     }
 
     @Test
-    public void addTodoToList() {
+    void addTodoToList() {
         // when
         Todo todo = todoService.createWith(Description.of("Something needs to be done"), EMPTY_COMPLETION_DATE);
 
@@ -43,12 +43,12 @@ public class TodoServiceTest {
     }
 
     @Test
-    public void addingWithInvalidValuesShouldThrowAnException() {
+    void addingWithInvalidValuesShouldThrowAnException() {
         assertThrows(IllegalArgumentException.class, () -> todoService.createWith(null, EMPTY_COMPLETION_DATE), "empty values are invalid");
     }
 
     @Test
-    public void listContainsAllTodos() {
+    void listContainsAllTodos() {
         // given: a set with descriptions
         Description description2 = Description.of("todo #2");
         Set<Description> todosToAdd = new HashSet<>(Arrays.asList(DEFAULT_DESCRIPTION, description2));
@@ -66,7 +66,7 @@ public class TodoServiceTest {
     }
 
     @Test
-    public void todoCanBeDeleted() {
+    void todoCanBeDeleted() {
         // given: a list with 1 todo
         Todo createdTodo = todoService.createWith(DEFAULT_DESCRIPTION, EMPTY_COMPLETION_DATE);
 
@@ -81,12 +81,12 @@ public class TodoServiceTest {
     }
 
     @Test
-    public void canNotDeleteFromEmptyList() {
+    void canNotDeleteFromEmptyList() {
         assertThrows(UnsupportedOperationException.class, () -> todoService.deleteWith(Integer.MAX_VALUE));
     }
 
     @Test
-    public void cannotDeleteUnknownTodos() {
+    void cannotDeleteUnknownTodos() {
         // given
         todoService.createWith(DEFAULT_DESCRIPTION, EMPTY_COMPLETION_DATE);
 
@@ -95,7 +95,7 @@ public class TodoServiceTest {
     }
 
     @Test
-    public void deleteWithInvalidValuesShouldThrowAnException() {
+    void deleteWithInvalidValuesShouldThrowAnException() {
         // given
         todoService.createWith(DEFAULT_DESCRIPTION, EMPTY_COMPLETION_DATE);
 

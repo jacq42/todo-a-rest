@@ -21,7 +21,7 @@ import de.jkrech.todo.domain.Todo;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TodoControllerIntegrationTest {
+class TodoCotrollerIntegrationTest {
 
     private static final String BASE_URI = "/api/v1/todos";
 
@@ -32,14 +32,14 @@ public class TodoControllerIntegrationTest {
     private MockMvc mvc;
 
     @Test
-    public void list() throws Exception {
+    void list() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get(BASE_URI)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
     @Test
-    public void create() throws Exception {
+    void create() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post(BASE_URI)
                 .param("description", "super tolles todo")
                 .param("completionDate", "2023-02-16")
@@ -54,7 +54,7 @@ public class TodoControllerIntegrationTest {
     }
 
     @Test
-    public void delete() throws Exception {
+    void delete() throws Exception {
         // given: a todo to delete
         Todo todo = todoService.createWith(Description.of("Lorem ipsum"), CompletionDate.of(LocalDate.now()));
 

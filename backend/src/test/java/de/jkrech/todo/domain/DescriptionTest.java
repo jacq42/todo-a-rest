@@ -8,17 +8,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class DescriptionTest {
+class DescriptionTest {
 
     @ParameterizedTest(name = "invalid: \"{0}\"")
     @ValueSource(strings = {"", " "} )
     @NullSource
-    public void invalidValuesShouldThrowAnException(String value) {
+    void invalidValuesShouldThrowAnException(String value) {
         assertThrows(IllegalArgumentException.class, () -> Description.of(value));
     }
 
     @Test
-    public void createValidDescription() {
+    void createValidDescription() {
         // given
         String descriptionValue = "Lorem ipsum";
 

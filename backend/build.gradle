@@ -2,8 +2,10 @@ plugins {
 	id 'org.springframework.boot' version '2.5.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'org.asciidoctor.convert' version '1.5.8'
+	id 'jacoco'
 	id 'java'
 	id 'info.solidsoft.pitest' version '1.5.1'
+	id 'org.sonarqube' version '3.0'
 }
 
 group = 'de.jkrech'
@@ -28,6 +30,18 @@ dependencies {
 test {
 	outputs.dir snippetsDir
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacoco {
+	toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+	dependsOn test
+    reports {
+        xml.enabled true
+    }
 }
 
 asciidoctor {
@@ -67,6 +81,14 @@ pitest {
     mutators = ['STRONGER']	// groups: OLD_DEFAULTS, DEFAULTS, STRONGER, ALL
 }
 
+sonarqube {
+    properties {
+      property "sonar.projectName", "todo-a-rest"
+      property "sonar.projectKey", "todo-a-rest"
+      property "sonar.host.url", "http://localhost:9000"
+    }
+}
+
 // Frontend + Backend = Happyend
 tasks.register('processFrontendResources', Copy) {
     // Directory containing the artifacts in the frontend project
@@ -87,3 +109,4 @@ tasks.named('processResources') {
     dependsOn tasks.named('processFrontendResources')
 }
 
+tasks['sonarqube'].dependsOn test

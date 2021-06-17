@@ -9,6 +9,7 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+@SuppressWarnings("java:S1135")
 public class Todo {
 
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger(1000);
@@ -37,18 +38,15 @@ public class Todo {
     }
 
     private static Todo of(Description description, CreatedAt createdAt, CompletionDate completionDate) {
-        ofNullable(description).orElseThrow(() -> new IllegalArgumentException("Description can't be empty."));
-
-        Todo todo = new Todo();
-        todo.id = ID_GENERATOR.getAndIncrement();
-        todo.description = description;
-        todo.createdAt = createdAt;
-        todo.completionDate = completionDate;
-        return todo;
+        var validDescription = ofNullable(description).orElseThrow(() -> new IllegalArgumentException("Description can't be empty."));
+        return new Todo(ID_GENERATOR.getAndIncrement(), validDescription, createdAt, completionDate);
     }
 
-    private Todo() {
-
+    private Todo(Integer id, Description description, CreatedAt createdAt, CompletionDate completionDate) {
+        this.id = id;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.completionDate = completionDate;
     }
 
     public Integer id() {

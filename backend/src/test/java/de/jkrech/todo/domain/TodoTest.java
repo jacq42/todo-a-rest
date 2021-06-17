@@ -14,17 +14,18 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 
-public class TodoTest {
+class TodoTest {
 
     @ParameterizedTest(name = "invalid: \"{0}\"")
     @NullSource
-    public void invalidValuesShouldThrowAnException(Description description) {
-        assertThrows(IllegalArgumentException.class, () -> Todo.of(description, CompletionDate.of(now())));
+    void invalidValuesShouldThrowAnException(Description description) {
+        CompletionDate completionDate = CompletionDate.of(now());
+        assertThrows(IllegalArgumentException.class, () -> Todo.of(description, completionDate));
     }
 
     @ParameterizedTest(name = "valid: description = \"{0}\" and completion date = \"{1}\" ")
     @MethodSource("validValues")
-    public void createWithValidValues(Description description, CompletionDate completionDate) {
+    void createWithValidValues(Description description, CompletionDate completionDate) {
         // when
         Todo todo = Todo.of(description, completionDate);
 

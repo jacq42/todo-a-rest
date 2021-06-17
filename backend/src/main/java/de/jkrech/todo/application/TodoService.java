@@ -21,6 +21,7 @@ import de.jkrech.todo.domain.Todo;
 /**
  * Service that adds, removes and lists {@link TODO}s
  */
+@SuppressWarnings("java:S1135")
 @Service
 public class TodoService {
 
@@ -44,9 +45,9 @@ public class TodoService {
      * @throws IllegalArgumentException if description is invalid
      */
     public Todo createWith(@NonNull Description description, @Nullable CompletionDate completionDate) {
-        ofNullable(description).orElseThrow(() -> new IllegalArgumentException("Description can't be empty."));
+        var validDescription = ofNullable(description).orElseThrow(() -> new IllegalArgumentException("Description can't be empty."));
 
-        Todo todo = Todo.of(description, completionDate);
+        var todo = Todo.of(validDescription, completionDate);
         addToList(todo);
         return todo;
     }
@@ -64,9 +65,9 @@ public class TodoService {
         if (isEmpty(todos)) {
             throw new UnsupportedOperationException("TODO List is empty");
         }
-        ofNullable(id).orElseThrow(() -> new IllegalArgumentException("ID can't be empty."));
+        var validId = ofNullable(id).orElseThrow(() -> new IllegalArgumentException("ID can't be empty."));
 
-        boolean deleted = todos.removeIf(hasId(id));
+        boolean deleted = todos.removeIf(hasId(validId));
         if (deleted) {
             return id;
         }
